@@ -1,0 +1,18 @@
+{
+  "name": "twitch-auto-downloader",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node --env-file=.env main.js"
+  },
+  "keywords": [],
+  "author": "bmagic",
+  "license": "MIT",
+  "dependencies": {
+    "@twurple/auth": "^7.1.0",
+    "@twurple/eventsub-http": "^7.1.0",
+    "randomstring": "^1.3.0"
+  },
+  "type": "module"
+}
