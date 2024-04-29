@@ -1,3 +1,3 @@
 docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
-docker buildx build --platform linux/arm64 -t bmagic/twitch-auto-downloader:0.0.2 .
-docker push bmagic/twitch-auto-downloader:0.0.2
+docker buildx build --platform linux/arm64 -t bmagic/twitch-auto-downloader:0.0.3 .
+docker push bmagic/twitch-auto-downloader:0.0.3

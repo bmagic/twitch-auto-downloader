@@ -19,6 +19,7 @@ async function main() {
   const token = process.env.TOKEN;
   const hostName = process.env.HOSTNAME;
   const port = process.env.PORT;
+  const secret = process.env.SECRET;
 
   // Create a new AppTokenAuthProvider
   const authProvider = new AppTokenAuthProvider(clientId, clientSecret);
@@ -26,9 +27,6 @@ async function main() {
   // Create a new ApiClient
   const apiClient = new ApiClient({ authProvider });
   const user = await apiClient.users.getUserByName(userName);
-
-  // Generate a secret for the subscription
-  const secret = randomstring.generate(50);
 
   // Create a new EventSubHttpListener and start it
   const listener = new EventSubHttpListener({
