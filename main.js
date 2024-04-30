@@ -2,12 +2,12 @@
  * Importing required modules and libraries
  */
 import util from 'util';
-import randomstring from 'randomstring';
 import { exec } from 'child_process';
 import { AppTokenAuthProvider } from '@twurple/auth';
 import { ApiClient } from '@twurple/api';
 import { EventSubHttpListener, EnvPortAdapter } from '@twurple/eventsub-http';
 
+let recording = false;
 /**
  * The main function that initializes the Twitch auto-downloader
  */
@@ -33,7 +33,6 @@ async function main() {
     apiClient,
     adapter: new EnvPortAdapter({
       hostName: hostName,
-      port: port,
     }),
     secret: secret,
   });
@@ -44,8 +43,12 @@ async function main() {
 
   // Subscribe to the stream.online event
   listener.onStreamOnline(user.id, async (e) => {
+    if (recording) {
+      console.log('Already recording, skipping...');
+      return;
+    }
     console.log(`${userName} went online, start recording...`);
-    await runStreamLink(authProvider, userName);
+    await runStreamLink(userName, token);
   });
 }
 
@@ -55,11 +58,15 @@ async function main() {
  * @param {string} token - The Twitch access token
  */
 async function runStreamLink(userName, token) {
+  recording = true;
+
   const { stdout, stderr } = await util.promisify(exec)(
     `streamlink "--twitch-api-header=Authorization=OAuth ${token}" twitch.tv/${userName} best -o /files/{author}-{time:%Y%m%d%H%M%S}.ts`
   );
   console.log('stdout:', stdout);
   console.log('stderr:', stderr);
+
+  recording = false;
 }
 
 try {
