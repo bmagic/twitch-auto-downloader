@@ -61,7 +61,7 @@ async function runStreamLink(userName, token) {
   recording = true;
 
   const { stdout, stderr } = await util.promisify(exec)(
-    `streamlink "--twitch-api-header=Authorization=OAuth ${token}" twitch.tv/${userName} best -o "/files/{title}-{time:%Y%m%d%H%M%S}.ts"`
+    `streamlink "--twitch-api-header=Authorization=OAuth ${token}" twitch.tv/${userName} best -o "/files/{time:%Y%m%d%H%M%S}-{title}.ts"`
   );
   console.log('stdout:', stdout);
   console.log('stderr:', stderr);
