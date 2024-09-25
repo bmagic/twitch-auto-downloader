@@ -1,11 +1,11 @@
 /**
  * Importing required modules and libraries
  */
-import util from 'util';
-import { exec } from 'child_process';
-import { AppTokenAuthProvider } from '@twurple/auth';
-import { ApiClient } from '@twurple/api';
-import { EventSubHttpListener, EnvPortAdapter } from '@twurple/eventsub-http';
+import util from "util";
+import { exec } from "child_process";
+import { AppTokenAuthProvider } from "@twurple/auth";
+import { ApiClient } from "@twurple/api";
+import { EventSubHttpListener, EnvPortAdapter } from "@twurple/eventsub-http";
 
 let recording = false;
 /**
@@ -43,12 +43,19 @@ async function main() {
 
   // Subscribe to the stream.online event
   listener.onStreamOnline(user.id, async (e) => {
+    console.log(`${userName} went online, start recording...`);
     if (recording) {
-      console.log('Already recording, skipping...');
+      console.log("Already recording, skipping...");
       return;
     }
-    console.log(`${userName} went online, start recording...`);
-    await runStreamLink(userName, token);
+    try {
+      recording = true;
+      await runStreamLink(userName, token);
+    } catch (error) {
+      console.error("Error during recording:", error);
+    } finally {
+      recording = false;
+    }
   });
 }
 
@@ -58,15 +65,11 @@ async function main() {
  * @param {string} token - The Twitch access token
  */
 async function runStreamLink(userName, token) {
-  recording = true;
-
   const { stdout, stderr } = await util.promisify(exec)(
     `streamlink "--twitch-api-header=Authorization=OAuth ${token}" twitch.tv/${userName} best -o "/files/{time:%Y%m%d%H%M%S}-{title}.ts"`
   );
-  console.log('stdout:', stdout);
-  console.log('stderr:', stderr);
-
-  recording = false;
+  console.log("stdout:", stdout);
+  console.log("stderr:", stderr);
 }
 
 try {

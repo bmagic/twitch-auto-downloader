@@ -12,4 +12,4 @@ COPY package-lock.json .
 RUN npm install 
 
 # Run app
-CMD node main.js
+CMD ["node", "main.js"]
